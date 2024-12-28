@@ -14,3 +14,5 @@ With the functionality
 Add City Weather: Function to add a new city weather object.
 Find Hottest City: Use find() to identify the city with the highest temperature.
 Filter by Condition: Use filter() to list all cities with a specific weather condition.
+
+And yes this is how I complete the assignment 1.
