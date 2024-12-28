@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .task-list li {
+            padding: 10px;
+            margin: 10px 0;
+            background: #e9ecef;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .task-list li.completed {
+            background: #d4edda;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .complete-btn {
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: none;
+            position: absolute;
+            right: 10px;
+            display: none;
+        }
+        .complete-btn:hover {
+            background-color: #218838;
+        }
+        .task-list li.pending:hover .complete-btn {
+            display: inline-block;
+        }
+        .completed-tasks-btn {
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 15px;
+            border: none;
+        }
+        .completed-tasks-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task Management System</h1>
+    <div class="container">
+        <div class="button-group">
+            <button onclick="addTask()">Add Task</button>
+            <button onclick="filterPendingTasks()">Pending Tasks</button>
+            <button onclick="sortTasksByPriority()">Priority</button>
+            <button class="completed-tasks-btn" onclick="filterCompletedTasks()">Completed Tasks</button>
+        </div>
+        <ul class="task-list" id="taskList"></ul>
+    </div>
+
+    <script>
+        let tasks = [
+            { title: "Learn JS", status: "Pending", priority: 3 },
+            { title: "FSWD Assignments", status: "Completed", priority: 5 },
+            { title: "SGP defination", status: "Pending", priority: 2 }
+        ];
+
+        // Function to render tasks
+        const renderTasks = (tasksToRender = tasks) => {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = tasksToRender
+                .map((task, index) => `
+                    <li class="${task.status.toLowerCase()}">
+                        <span>Task: ${task.title}, Status: ${task.status}, Priority: ${task.priority}</span>
+                        <button class="complete-btn" onclick="markAsCompleted(${index})">Completed</button>
+                    </li>
+                `)
+                .join('');
+        };
+
+        // Add Task Function
+        const addTask = () => {
+            const newTask = { title: `Task ${tasks.length + 1}`, status: "Pending", priority: Math.ceil(Math.random() * 5) };
+            tasks = [...tasks, newTask]; // Adding task to the array
+            renderTasks();
+        };
+
+        // Mark Task as Completed
+        const markAsCompleted = (index) => {
+            tasks[index].status = "Completed";
+            renderTasks();
+        };
+
+        // Filter Pending Tasks Function
+        const filterPendingTasks = () => {
+            const pendingTasks = tasks.filter(task => task.status === "Pending");
+            renderTasks(pendingTasks);
+        };
+
+        // Filter Completed Tasks Function with a limit of 15 tasks
+        const filterCompletedTasks = () => {
+            const completedTasks = tasks.filter(task => task.status === "Completed").slice(0, 15); // Limit to first 15 completed tasks
+            renderTasks(completedTasks);
+        };
+
+        // Sort Tasks by Priority (ascending order) excluding completed tasks
+        const sortTasksByPriority = () => {
+            const sortedTasks = [...tasks]
+                .filter(task => task.status !== "Completed") // Exclude completed tasks
+                .sort((a, b) => a.priority - b.priority); // Sort by priority ascending
+            renderTasks(sortedTasks);
+        };
+
+        // Initial rendering of tasks
+        renderTasks();
+    </script>
+</body>
+</html>
