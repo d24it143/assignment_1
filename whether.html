@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .weather-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .weather-list li {
+            padding: 10px;
+            margin: 10px 0;
+            background: #e9ecef;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .remove-btn {
+            background-color: #dc3545; /* Red color for remove button */
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-size: 14px;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            visibility: hidden; /* Hidden by default */
+        }
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+        .weather-list li:hover .remove-btn {
+            visibility: visible; /* Show the button when hovering over the list item */
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather Forecast Tracker</h1>
+    <div class="container">
+        <div class="button-group">
+            <button onclick="addCityWeather()">Add City Weather</button>
+            <button onclick="findHottestCity()">Find Hottest City</button>
+            <button onclick="filterByCondition('Sunny')">Filter Sunny Cities</button>
+            <button onclick="filterByCondition('Rainy')">Filter Rainy Cities</button>
+        </div>
+        <ul class="weather-list" id="weatherList"></ul>
+    </div>
+
+    <script>
+        let cityWeatherData = [
+            { cityName: "New York", temperature: 22, condition: "Sunny" },
+            { cityName: "London", temperature: 15, condition: "Cloudy" },
+            { cityName: "Tokyo", temperature: 30, condition: "Sunny" },
+            { cityName: "Sydney", temperature: 18, condition: "Rainy" }
+        ];
+
+        // Function to render city weather data
+        const renderWeatherData = (citiesToRender = cityWeatherData) => {
+            const weatherList = document.getElementById('weatherList');
+            weatherList.innerHTML = ''; // Clear existing list
+            weatherList.innerHTML = citiesToRender
+                .map((city, index) => `
+                    <li>
+                        <span>City: ${city.cityName}, Temp: ${city.temperature}°C, Condition: ${city.condition}</span>
+                        <button class="remove-btn" onclick="removeCity(${index})">Remove</button>
+                    </li>
+                `)
+                .join('');
+        };
+
+        // Add a new city weather
+        const addCityWeather = () => {
+            const newCity = { cityName: `City ${cityWeatherData.length + 1}`, temperature: Math.floor(Math.random() * 40), condition: ['Sunny', 'Cloudy', 'Rainy'][Math.floor(Math.random() * 3)] };
+            cityWeatherData.push(newCity);
+            renderWeatherData();
+        };
+
+        // Remove a city from the list
+        const removeCity = (index) => {
+            cityWeatherData.splice(index, 1); // Remove city at the specified index
+            renderWeatherData();
+        };
+
+        // Find the hottest city and render cities in descending order of temperature
+        const findHottestCity = () => {
+            // Sort cities in descending order of temperature
+            cityWeatherData.sort((a, b) => b.temperature - a.temperature);
+            renderWeatherData();
+        };
+
+        // Filter cities by condition
+        const filterByCondition = (condition) => {
+            const filteredCities = cityWeatherData.filter(city => city.condition === condition);
+            renderWeatherData(filteredCities);
+        };
+
+        // Initial render (cities in the order they were added)
+        renderWeatherData();
+    </script>
+</body>
+</html>
